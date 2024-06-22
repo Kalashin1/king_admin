@@ -1,50 +1,77 @@
+import { useRef, useCallback, useState } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../../firebase-settings';
+import { uploadAsset } from '../../../../helper';
+import { SCREENS } from '../../../../../navigation/constants';
+import { useDropzone } from 'react-dropzone'
+
 const CreatePlanForm = () => {
+  const formRef = useRef(null);
+
+  const onDrop = useCallback(acceptedFiles => {
+    // Do something with the files
+    console.log("accepted files", acceptedFiles)
+    setFiles(acceptedFiles)
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const [files, setFiles] = useState()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { title: { value: title }, price: { value: price }, description: { value: description } } = formRef.current;
+      const imageURL = await uploadAsset(files, 'plans/thumbnail/', false);
+      await addDoc(collection(db, "plans"), {
+        title,
+        price,
+        description,
+        thumbnail: imageURL
+      })
+      alert('Plan created successfully!');
+      location.assign(SCREENS.PLANS)
+    } catch (error) {
+      alert('Error creating plan');
+      console.log(error)
+    }
+  }
+
   return (
     <div className="col-12 grid-margin stretch-card">
       <div className="card">
         <div className="card-body">
           <h4 className="card-title">Create New Plan</h4>
           <p className="card-description">
-            Basic form elements
+            Create a new plan for sale
           </p>
-          <form className="forms-sample">
+          <form className="forms-sample" ref={formRef} onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="exampleInputName1">Name</label>
-              <input type="text" className="form-control" id="exampleInputName1" placeholder="Name" />
+              <label htmlFor="exampleInputName1">Title</label>
+              <input type="text" className="form-control" name="title" id="exampleInputName1" placeholder="Name" />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputEmail3">Email address</label>
-              <input type="email" className="form-control" id="exampleInputEmail3" placeholder="Email" />
+              <label htmlFor="exampleInputEmail3">Price</label>
+              <input type="text" className="form-control" name="price" id="exampleInputEmail3" placeholder="3.49" />
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputPassword4">Password</label>
-              <input type="password" className="form-control" id="exampleInputPassword4" placeholder="Password" />
+              <label htmlFor="exampleInputPassword4">Description</label>
+              <textarea className="form-control" id="exampleInputPassword4" rows={4} name="description" placeholder="description here"></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="exampleSelectGender">Gender</label>
-              <select className="form-control" id="exampleSelectGender">
-                <option>Male</option>
-                <option>Female</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>File upload</label>
-              <input type="file" name="img[]" className="file-upload-default" />
-              <div className="input-group col-xs-12">
-                <input type="text" className="form-control file-upload-info" disabled="" placeholder="Upload Image" />
-                <span className="input-group-append">
-                  <button className="file-upload-browse btn btn-primary" type="button">Upload</button>
-                </span>
+              <div className='border rounded p-4' style={{ cursor: 'pointer' }}>
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} multiple={false} />
+                  {
+                    isDragActive ?
+                      <p>Drop the files here ...</p> :
+                      <p>Drag n drop some files here, or click to select files</p>
+                  }
+                </div>
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="exampleInputCity1">City</label>
-              <input type="text" className="form-control" id="exampleInputCity1" placeholder="Location" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="exampleTextarea1">Textarea</label>
-              <textarea className="form-control" id="exampleTextarea1" rows="4"></textarea>
-            </div>
+
+
             <button type="submit" className="btn btn-primary mr-2">Submit</button>
             <button className="btn btn-light">Cancel</button>
           </form>
