@@ -4,9 +4,11 @@ import { db } from '../../../../../firebase-settings';
 import { uploadAsset } from '../../../../helper';
 import { SCREENS } from '../../../../../navigation/constants';
 import { useDropzone } from 'react-dropzone'
+import { useNavigate } from 'react-router-dom';
 
 const CreatePlanForm = () => {
   const formRef = useRef(null);
+  const navigate = useNavigate()
 
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
@@ -30,7 +32,7 @@ const CreatePlanForm = () => {
         thumbnail: imageURL
       })
       alert('Plan created successfully!');
-      location.assign(SCREENS.PLANS)
+      navigate(SCREENS.PLANS)
     } catch (error) {
       alert('Error creating plan');
       console.log(error)

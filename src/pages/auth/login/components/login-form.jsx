@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SCREENS } from '../../../../navigation/constants';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebase-settings';
@@ -7,13 +7,13 @@ import { auth } from '../../../../firebase-settings';
 const LoginForm = () => {
 
   const formRef = useRef(null);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const login = async (e) => {
     e.preventDefault();
     const { email: { value: email }, password: { value: password } } = formRef.current
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      location.assign(SCREENS.DASHBOARD)
+      navigate(SCREENS.DASHBOARD)
     } catch (error) {
       alert("error loging in");
       console.error('error', error)
