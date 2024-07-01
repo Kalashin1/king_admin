@@ -10,6 +10,7 @@ import Withdrawal from "../pages/dashboard/withdrawal";
 import ProfilePage from "../pages/dashboard/profile";
 import Plans from "../pages/dashboard/plans";
 import CreatePlan from "../pages/dashboard/plans/create";
+import Users from "../pages/dashboard/users";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: SCREENS.CREATE_PLAN,
     element: <CreatePlan />,
+  },
+  {
+    path: SCREENS.USERS_TABLE,
+    element: <Users />,
   },
 ]);
 

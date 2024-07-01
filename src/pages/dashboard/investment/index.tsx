@@ -18,30 +18,30 @@ const Investments = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const user_id = localStorage.getItem("user_id");
 
-  useEffect(() => {
-    const set_up = async () => {
-      const userRef = await getDoc(doc(db, "users", user_id!));
-      if (userRef.exists()) {
-        const _user = { id: userRef.id, ...userRef.data() } as User;
-        let q: Query<DocumentData, DocumentData>;
-        if (_user.isAdmin) {
-          q = query(collection(db, "investments"));
-        } else {
-          q = query(
-            collection(db, "investments"),
-            where("user.id", "==", user_id)
-          );
-        }
-        const docRefs = await getDocs(q);
-        const _investments = docRefs.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Investment[];
-        setInvestments(_investments);
+  const fetchInvestment = async () => {
+    const userRef = await getDoc(doc(db, "users", user_id!));
+    if (userRef.exists()) {
+      const _user = { id: userRef.id, ...userRef.data() } as User;
+      let q: Query<DocumentData, DocumentData>;
+      if (_user.isAdmin) {
+        q = query(collection(db, "investments"));
+      } else {
+        q = query(
+          collection(db, "investments"),
+          where("user.id", "==", user_id)
+        );
       }
-    };
+      const docRefs = await getDocs(q);
+      const _investments = docRefs.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Investment[];
+      setInvestments(_investments);
+    }
+  };
 
-    set_up();
+  useEffect(() => {
+    fetchInvestment();
   }, [user_id]);
 
   return (
@@ -51,7 +51,12 @@ const Investments = () => {
       </div>
       <section className="px-12 py-6 h-screen">
         <div className="bg-white">
-          {investments && <InvestmentTable investments={investments} />}
+          {investments && (
+            <InvestmentTable
+              getInvestments={fetchInvestment}
+              investments={investments}
+            />
+          )}
         </div>
       </section>
     </Layout>

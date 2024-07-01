@@ -9,13 +9,22 @@ import {
   TableRow,
 } from "../../../../components/ui/table";
 import { Investment, Plan, User } from "../../../../types";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../firebase-setting";
 
-const InvestmentTable: FC<{ investments: Investment[] }> = ({
-  investments,
-}) => {
+const InvestmentTable: FC<{
+  investments: Investment[];
+  getInvestments: (...args: unknown[]) => void;
+}> = ({ investments, getInvestments }) => {
   const [user, setUser] = useState<User | null>(null);
+
+  const deleteInvestment = async (id: string) => {
+    if (confirm("are you sure you want to delete this investment?")) {
+      await deleteDoc(doc(db, "users", id));
+      alert("user deleted");
+      getInvestments();
+    }
+  };
 
   useEffect(() => {
     const set_up = async () => {
@@ -68,10 +77,10 @@ const InvestmentTable: FC<{ investments: Investment[] }> = ({
         </TableCell>
         {user?.isAdmin && (
           <TableCell className="grid grid-cols-2">
-            <span className="bg-green-700 mr-2 rounded-full flex items-center justify-center h-8 w-8 shadow-md">
-              <i className="fas fa-edit text-white" />
-            </span>
-            <span className="bg-red-800 rounded-full flex items-center justify-center h-8 w-8 shadow-md">
+            <span
+              className="cursor-pointer bg-red-800 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
+              onClick={() => deleteInvestment(investment.id)}
+            >
               <i className="fas fa-trash text-white" />
             </span>
           </TableCell>

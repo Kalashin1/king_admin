@@ -9,4 +9,5 @@ export enum SCREENS {
   PROFILE = "/profile",
   PLANS = "/plans",
   CREATE_PLAN = "/create-plan",
+  USERS_TABLE = "/users",
 }
