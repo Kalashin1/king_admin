@@ -149,7 +149,7 @@ const EditProfileForm: FC<{
           type="text"
           name="accountNumber"
           id=""
-          defaultValue={user?.bank.accountNumber}
+          defaultValue={user?.bank?.accountNumber}
           placeholder="Enter your account number"
           className="border p-2 w-1/2"
         />
@@ -157,14 +157,14 @@ const EditProfileForm: FC<{
           type="text"
           name="iban"
           id=""
-          defaultValue={user?.bank.iban}
+          defaultValue={user?.bank?.iban}
           placeholder="Enter your Iban"
           className="border p-2  w-1/2"
         />
         <input
           type="text"
           name="swiftCode"
-          defaultValue={user?.bank.swiftCode}
+          defaultValue={user?.bank?.swiftCode}
           id=""
           placeholder="Enter your swift code"
           className="border p-2 w-1/2"

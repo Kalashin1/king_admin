@@ -106,10 +106,7 @@ const CurrentInvestment: FC<{ plans: Plan[] }> = ({ plans }) => {
               <div className="p-4">
                 <button
                   onClick={() => navigate(SCREENS.CREATE_INVESTMENT)}
-                  className={`w-full bg-${
-                    // @ts-ignore
-                    planColors[index + 1].strong
-                  } text-white rounded-full px-4 py-2 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800`}
+                  className={`w-full bg-blue-500 text-white rounded-full px-4 py-2 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800`}
                 >
                   Add User
                 </button>

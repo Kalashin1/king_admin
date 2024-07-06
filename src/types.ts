@@ -48,6 +48,7 @@ export type Investment = {
   createAt: string;
   plan: Pick<Plan, "id" | "title" | "id" | "ROI" | "duration">;
   withdrawalDate: string;
+  earnings: number;
   status:
     | "CREATED"
     | "PROCESSING"
@@ -56,3 +57,9 @@ export type Investment = {
     | "REJECTED"
     | "CANCELED";
 } & DocumentData;
+
+export function addDaysToDate(date: Date, daysToAdd: number): Date {
+  const newDate = new Date(date.getTime()); // Create a copy to avoid modifying original
+  newDate.setDate(newDate.getDate() + daysToAdd);
+  return newDate;
+}

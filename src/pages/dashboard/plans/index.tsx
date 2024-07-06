@@ -27,7 +27,7 @@ const Plans = () => {
       <div className="px-12 pt-8">
         <h3 className="text-2xl font-bold">Current Investments</h3>
       </div>
-      <section className="px-12 h-screen">
+      <section className="px-12 min-h-screen overflow-y-scroll">
         {plans && <CurrentInvestment plans={plans} />}
       </section>
     </Layout>

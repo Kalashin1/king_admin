@@ -89,11 +89,14 @@ const CreatePlanForm = () => {
         </div>
         <div className="w-1/2">
           <input
-            type="text"
+            type="number"
             name="title"
-            value={`${
+            defaultValue={`${
               durations.find((_duration) => _duration.value === duration)?.ROI
-            }%`}
+            }`}
+            onChange={(e) => {
+              setDuration(parseFloat(e.target.value));
+            }}
             id=""
             placeholder="ROI"
             className="border p-2 w-full"
