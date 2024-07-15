@@ -55,49 +55,43 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const set_up = async (id: string) => {
-      try {
-        const docRef = await getDoc(doc(db, "users", id));
-        if (docRef.exists()) {
-          const _user = { id: docRef.id, ...docRef.data() } as User;
-          setUser(_user);
-          let q: Query<DocumentData, DocumentData>;
-          let q2: Query<DocumentData, DocumentData>;
+  const set_up = async (id: string) => {
+    try {
+      const docRef = await getDoc(doc(db, "users", id));
+      if (docRef.exists()) {
+        const _user = { id: docRef.id, ...docRef.data() } as User;
+        setUser(_user);
+        let q: Query<DocumentData, DocumentData>;
+        let q2: Query<DocumentData, DocumentData>;
 
-          if (_user.isAdmin) {
-            q = query(collection(db, "transactions"));
-            q2 = query(collection(db, "investments"));
-          } else {
-            q = query(
-              collection(db, "transactions"),
-              where("user.id", "==", id)
-            );
-            q2 = query(
-              collection(db, "investments"),
-              where("user.id", "==", id)
-            );
-          }
-          const docRefs = await getDocs(q);
-          const _transactions = docRefs.docs.map(
-            (doc) => ({ id: doc.id, ...doc.data() } as Transaction)
-          );
-          setTransactions(_transactions);
-
-          const _docRefs = await getDocs(q2);
-          const _investments = _docRefs.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Investment[];
-          setInvestments(_investments);
+        if (_user.isAdmin) {
+          q = query(collection(db, "transactions"));
+          q2 = query(collection(db, "investments"));
+        } else {
+          q = query(collection(db, "transactions"), where("user.id", "==", id));
+          q2 = query(collection(db, "investments"), where("user.id", "==", id));
         }
-      } catch (error) {
-        alert("error fetching user");
-        console.log(error);
-        navigate(SCREENS.PROFILE);
-      }
-    };
+        const docRefs = await getDocs(q);
+        const _transactions = docRefs.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() } as Transaction)
+        );
+        setTransactions(_transactions);
 
+        const _docRefs = await getDocs(q2);
+        const _investments = _docRefs.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Investment[];
+        setInvestments(_investments);
+      }
+    } catch (error) {
+      alert("error fetching user");
+      console.log(error);
+      navigate(SCREENS.PROFILE);
+    }
+  };
+
+  useEffect(() => {
     set_up(localStorage.getItem("user_id")!);
   }, [navigate]);
 

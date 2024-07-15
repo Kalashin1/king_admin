@@ -1,11 +1,27 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Plan } from "../../../../types";
 import { SCREENS } from "../../../../navigation/constant";
 import { useNavigate } from "react-router-dom";
+import { db } from "../../../../firebase-setting";
+import { LoaderContext } from "../../../../App";
+import { deleteDoc, doc } from "firebase/firestore";
 
-const CurrentInvestment: FC<{ plans: Plan[] }> = ({ plans }) => {
+const CurrentInvestment: FC<{ plans: Plan[]; set_up: () => Promise<void> }> = ({
+  plans,
+  set_up,
+}) => {
   const navigate = useNavigate();
+  const { setIsLoading } = useContext(LoaderContext);
+  const deletePlan = async (id: string) => {
+    setIsLoading!(true);
+    if (confirm("are you sure you want to delete this plan?")) {
+      await deleteDoc(doc(db, "plans", id));
+      alert("plan deleted");
+      set_up();
+    }
+    setIsLoading!(false);
+  };
 
   return (
     <div className="min-h-screen py-12 flex items-center justify-center">
@@ -14,11 +30,17 @@ const CurrentInvestment: FC<{ plans: Plan[] }> = ({ plans }) => {
         {plans &&
           plans.map((plan, index) => (
             <div
-              className={`bg-white rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105`}
+              className={`bg-white rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 relative`}
               key={index}
             >
               {/* @ts-ignore */}
               <div className={`p-1 bg-blue-200`}></div>
+              <button
+                className="m-2 cursor-pointer"
+                onClick={() => deletePlan(plan.id)}
+              >
+                <i className="fas fa-trash" />
+              </button>
               <div className="p-8">
                 <h2 className="text-3xl font-bold text-gray-800 mb-4">
                   {plan.title}
