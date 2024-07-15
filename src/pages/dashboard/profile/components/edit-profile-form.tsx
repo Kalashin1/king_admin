@@ -140,7 +140,7 @@ const EditProfileForm: FC<{
         <input
           type="text"
           name="bankName"
-          defaultValue={user?.bank.bankName}
+          defaultValue={user?.bank?.bankName}
           id=""
           placeholder="Enter the name of your bank"
           className="border p-2  w-1/2"
