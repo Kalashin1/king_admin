@@ -17,7 +17,7 @@ const InvestmentTable: FC<{
   getInvestments: (...args: unknown[]) => void;
 }> = ({ investments, getInvestments }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const deleteInvestment = async (id: string) => {
@@ -50,26 +50,88 @@ const InvestmentTable: FC<{
     index: number;
   }) => {
     const [plan, setPlan] = useState<Plan | null>(null);
+    const [price, setPrice] = useState("");
 
     useEffect(() => {
       const set_up = async () => {
         const docRef = await getDoc(doc(db, "plans", investment.plan.id));
-        setPlan({ id: docRef.id, ...docRef.data() } as Plan);
+        const _plan = { id: docRef.id, ...docRef.data() } as Plan;
+        setPlan(_plan);
+        setPrice(
+          new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+          }).format(investment.earnings ?? 0)
+        );
       };
       set_up();
-    }, [investment.plan.id]);
-
-    const price = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(investment.earnings ?? 0);
+    }, [investment.earnings, investment.plan.id]);
 
     // console.log(
     //   "date",
     //   parseFloat(investment.createAt) + 60 * 60 * 24 * plan?.duration!
     // );
 
+    const EditAmountModal = ({
+      investmentId,
+      currentAmount,
+    }: {
+      investmentId: string;
+      currentAmount: number;
+    }) => {
+      console.log("investment", investmentId);
+      const [newAmount, setNewAmount] = useState(currentAmount);
+
+      const updatePrice = async (id: string) => {
+        setIsLoading(true);
+        console.log("new amount", newAmount);
+        await updateDoc(doc(db, "investments", id), {
+          earnings: newAmount.toString(),
+        });
+        setShowEditModal(false);
+        alert("investment updated");
+        getInvestments();
+        setIsLoading(false);
+      };
+      return (
+        <div
+          className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10"
+          onClick={() => setShowEditModal(false)}
+        >
+          <div
+            className="max-h-full w-full max-w-xl overflow-y-auto sm:rounded-2xl bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-full">
+              <div className="m-8 my-20 max-w-[400px] mx-auto">
+                <div className="mb-8">
+                  <h1 className="mb-4 text-3xl font-extrabold">
+                    Edit Profit Amount
+                  </h1>
+                  <input
+                    type="amount"
+                    className="my-2 w-full border py-2 px-6 rounded-xl"
+                    defaultValue={currentAmount}
+                    onChange={(e) => setNewAmount(parseFloat(e.target.value))}
+                  />
+                </div>
+                <div className="space-y-4">
+                  <button
+                    className="p-3 bg-black rounded-full text-white w-full font-semibold"
+                    onClick={() => updatePrice(investmentId)}
+                  >
+                    {isLoading ? "...Loading" : "Update Earning"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     console.log("earnings", investment.earnings);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     return (
       <TableRow className={`bg-gray-50`} key={index}>
@@ -93,6 +155,7 @@ const InvestmentTable: FC<{
               className="cursor-pointer bg-green-600 rounded-full flex items-center justify-center h-8 w-8 shadow-md mr"
               onClick={() => {
                 setShowEditModal(!showEditModal);
+                localStorage.setItem("investment_id", investment.id);
               }}
             >
               <i className="fas fa-edit text-white" />
@@ -112,63 +175,6 @@ const InvestmentTable: FC<{
           </TableCell>
         )}
       </TableRow>
-    );
-  };
-
-  const EditAmountModal = ({
-    investmentId,
-    currentAmount,
-  }: {
-    investmentId: string;
-    currentAmount: number;
-  }) => {
-    const [newAmount, setNewAmount] = useState(currentAmount);
-
-    const updatePrice = async (id: string) => {
-      setIsLoading(true);
-      console.log("new amount", newAmount);
-      await updateDoc(doc(db, "investments", id), {
-        earnings: newAmount.toString(),
-      });
-      setShowEditModal(false);
-      alert("investment updated");
-      getInvestments();
-      setIsLoading(false);
-    };
-    return (
-      <div
-        className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-50 py-10"
-        onClick={() => setShowEditModal(false)}
-      >
-        <div
-          className="max-h-full w-full max-w-xl overflow-y-auto sm:rounded-2xl bg-white"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="w-full">
-            <div className="m-8 my-20 max-w-[400px] mx-auto">
-              <div className="mb-8">
-                <h1 className="mb-4 text-3xl font-extrabold">
-                  Edit Profit Amount
-                </h1>
-                <input
-                  type="amount"
-                  className="my-2 w-full border py-2 px-6 rounded-xl"
-                  defaultValue={currentAmount}
-                  onChange={(e) => setNewAmount(parseFloat(e.target.value))}
-                />
-              </div>
-              <div className="space-y-4">
-                <button
-                  className="p-3 bg-black rounded-full text-white w-full font-semibold"
-                  onClick={() => updatePrice(investmentId)}
-                >
-                  {isLoading ? "...Loading" : "Update Earning"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     );
   };
 
