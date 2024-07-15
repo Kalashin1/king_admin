@@ -30,6 +30,7 @@ const CreatePlanForm = () => {
       plan_title: { value: title },
       price: { value: price },
       description: { value: description },
+      roi: { value: roi },
     } = formRef.current!;
     try {
       const doc = await addDoc(collection(db, "plans"), {
@@ -37,7 +38,7 @@ const CreatePlanForm = () => {
         price,
         description,
         duration,
-        ROI: durations.find((_duration) => _duration.value === duration)?.ROI,
+        ROI: roi,
       });
       setIsLoading!(false);
       console.log(doc.id);
@@ -90,14 +91,7 @@ const CreatePlanForm = () => {
         <div className="w-1/2">
           <input
             type="number"
-            name="title"
-            defaultValue={`${
-              durations.find((_duration) => _duration.value === duration)?.ROI
-            }`}
-            onChange={(e) => {
-              setDuration(parseFloat(e.target.value));
-            }}
-            id=""
+            name="roi"
             placeholder="ROI"
             className="border p-2 w-full"
           />

@@ -5,25 +5,6 @@ import { SCREENS } from "../../../../navigation/constant";
 import { useNavigate } from "react-router-dom";
 
 const CurrentInvestment: FC<{ plans: Plan[] }> = ({ plans }) => {
-  const planColors = {
-    1: {
-      weak: "blue-200",
-      strong: "blue-600",
-    },
-    2: {
-      weak: "green-200",
-      strong: "green-700",
-    },
-    3: {
-      weak: "yellow-200",
-      strong: "yellow-700",
-    },
-    4: {
-      weak: "purple-200",
-      strong: "purple-700",
-    },
-  };
-
   const navigate = useNavigate();
 
   return (
@@ -37,7 +18,7 @@ const CurrentInvestment: FC<{ plans: Plan[] }> = ({ plans }) => {
               key={index}
             >
               {/* @ts-ignore */}
-              <div className={`p-1 bg-${planColors[index + 1].weak}`}></div>
+              <div className={`p-1 bg-blue-200`}></div>
               <div className="p-8">
                 <h2 className="text-3xl font-bold text-gray-800 mb-4">
                   {plan.title}
