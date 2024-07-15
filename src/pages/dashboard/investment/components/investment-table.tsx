@@ -23,7 +23,7 @@ const InvestmentTable: FC<{
   const deleteInvestment = async (id: string) => {
     setIsLoading(true);
     if (confirm("are you sure you want to delete this investment?")) {
-      await deleteDoc(doc(db, "users", id));
+      await deleteDoc(doc(db, "investments", id));
       alert("investment deleted");
       getInvestments();
     }
@@ -64,14 +64,12 @@ const InvestmentTable: FC<{
       currency: "USD",
     }).format(investment.earnings ?? 0);
 
-    // console.log((100 / parseFloat(plan?.ROI!)) * parseFloat(plan?.price!));
+    // console.log(
+    //   "date",
+    //   parseFloat(investment.createAt) + 60 * 60 * 24 * plan?.duration!
+    // );
 
-    // console.log("plan price", plan?.price);
-
-    console.log(
-      "date",
-      parseFloat(investment.createAt) + 60 * 60 * 24 * plan?.duration!
-    );
+    console.log("earnings", investment.earnings);
 
     return (
       <TableRow className={`bg-gray-50`} key={index}>
@@ -128,6 +126,7 @@ const InvestmentTable: FC<{
 
     const updatePrice = async (id: string) => {
       setIsLoading(true);
+      console.log("new amount", newAmount);
       await updateDoc(doc(db, "investments", id), {
         earnings: newAmount.toString(),
       });
