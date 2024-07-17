@@ -24,6 +24,7 @@ import {
   User,
 } from "../../../types";
 import InvestmentTable from "../investment/components/investment-table";
+import CurrentEarnings from "./components/current-earnings";
 
 const Home = () => {
   const [user, setUser] = useState<User>();
@@ -98,7 +99,9 @@ const Home = () => {
   console.log("user", user);
   return (
     <Layout>
-      {/* <section className="bg-gray-100 p-6"><Investments /></section> */}
+      <section className="bg-gray-100 p-6">
+        <CurrentEarnings investments={investments} />
+      </section>
       <section className="px-6 my-4 mb-8 py-2">
         <h3 className="text-2xl my-6">Your Investments</h3>
         {/* {investments && <CurrentInvestment plans={investments} />} */}
