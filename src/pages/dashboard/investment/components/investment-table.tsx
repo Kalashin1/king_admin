@@ -151,7 +151,7 @@ const InvestmentTable: FC<{
         </TableCell>
         {user?.isAdmin && (
           <TableCell className="grid grid-cols-2">
-            <span
+            <button
               className="cursor-pointer bg-green-600 rounded-full flex items-center justify-center h-8 w-8 shadow-md mr"
               onClick={() => {
                 setShowEditModal(!showEditModal);
@@ -159,13 +159,13 @@ const InvestmentTable: FC<{
               }}
             >
               <i className="fas fa-edit text-white" />
-            </span>
-            <span
-              className="cursor-pointer bg-red-800 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
+            </button>
+            <button
+              className="ml-2 cursor-pointer bg-red-800 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
               onClick={() => deleteInvestment(investment.id)}
             >
               <i className="fas fa-trash text-white" />
-            </span>
+            </button>
             {showEditModal && (
               <EditAmountModal
                 currentAmount={investment.earnings}
