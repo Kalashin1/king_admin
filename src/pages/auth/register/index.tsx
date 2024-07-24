@@ -4,9 +4,9 @@ import { SCREENS } from "../../../navigation/constant";
 
 const Register = () => {
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex lg:overflow-y-hidden">
       <div
-        className="hidden lg:flex w-full lg:w-1/2 signup_img_section
+        className="hidden lg:flex w-full lg:w-1/3 signup_img_section
           justify-around items-center"
       >
         <div
@@ -22,15 +22,15 @@ const Register = () => {
           <div className="flex justify-center lg:justify-start mt-6">
             <Link
               to={SCREENS.LOGIN}
-              className="hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 bg-white text-indigo-800 mt-4 px-4 py-2 rounded-2xl font-bold mb-2"
+              className="hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 bg-white text-indigo-800 mt-4 px-8 py-2 rounded-md font-bold mb-2"
             >
               Login
             </Link>
           </div>
         </div>
       </div>
-      <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
-        <div className="w-full px-8 md:px-32 lg:px-24">
+      <div className="flex w-full lg:w-2/3 justify-center items-center bg-white space-y-8">
+        <div className="w-full px-8 md:px-32 lg:px-40">
           <RegistrationForm />
         </div>
       </div>
