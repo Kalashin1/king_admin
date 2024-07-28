@@ -7,20 +7,20 @@ import {
   TableBody,
   TableCell,
 } from "../../../../components/ui/table";
-import { User } from "../../../../types";
+import { Invoice } from "../../../../types";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../../firebase-setting";
 
-const UserTable: FC<{
-  users: User[];
-  updateUsers: (...args: unknown[]) => void;
-}> = ({ users, updateUsers }) => {
+const InvoiceTable: FC<{
+  invoices: Invoice[];
+  updateInvoice: (...args: unknown[]) => void;
+}> = ({ invoices, updateInvoice }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _deleteUser = async (id: string) => {
-    if (confirm("are you sure you want to delete this user account?")) {
-      await deleteDoc(doc(db, "users", id));
-      alert("user deleted");
-      updateUsers();
+  const _deleteOrder = async (id: string) => {
+    if (confirm("are you sure you want to delete this invoice?")) {
+      await deleteDoc(doc(db, "invoices", id));
+      alert("invoice deleted");
+      updateInvoice();
     }
   };
   return (
@@ -29,25 +29,24 @@ const UserTable: FC<{
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">S/N</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
+            <TableHead>User</TableHead>
             <TableHead>Phone</TableHead>
-            <TableHead>Account Type</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Order ID</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users &&
-            users.map((user, index) => (
+          {invoices &&
+            invoices.map((invoice, index) => (
               <TableRow className={`bg-gray-50`} key={index}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.accountType}</TableCell>
+                <TableCell>{invoice.user.name}</TableCell>
+                <TableCell>{invoice.amount}</TableCell>
+                <TableCell>{invoice.products.length}</TableCell>
                 <TableCell>
                   <span
                     className="cursor-pointer bg-gray-500 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
-                    onClick={() => {}}
+                    onClick={() => _deleteOrder(invoice.id)}
                   >
                     <i className="fas fa-ellipsis-vertical text-white" />
                   </span>
@@ -60,4 +59,4 @@ const UserTable: FC<{
   );
 };
 
-export default UserTable;
+export default InvoiceTable;

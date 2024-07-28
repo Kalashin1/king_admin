@@ -7,20 +7,20 @@ import {
   TableBody,
   TableCell,
 } from "../../../../components/ui/table";
-import { User } from "../../../../types";
+import { Order } from "../../../../types";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../../firebase-setting";
 
-const UserTable: FC<{
-  users: User[];
-  updateUsers: (...args: unknown[]) => void;
-}> = ({ users, updateUsers }) => {
+const OrderTable: FC<{
+  orders: Order[];
+  updateOrders: (...args: unknown[]) => void;
+}> = ({ orders, updateOrders }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _deleteUser = async (id: string) => {
-    if (confirm("are you sure you want to delete this user account?")) {
-      await deleteDoc(doc(db, "users", id));
-      alert("user deleted");
-      updateUsers();
+  const _deleteOrder = async (id: string) => {
+    if (confirm("are you sure you want to delete this order?")) {
+      await deleteDoc(doc(db, "orders", id));
+      alert("order deleted");
+      updateOrders();
     }
   };
   return (
@@ -29,25 +29,24 @@ const UserTable: FC<{
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">S/N</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
+            <TableHead>User</TableHead>
             <TableHead>Phone</TableHead>
-            <TableHead>Account Type</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Items</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users &&
-            users.map((user, index) => (
+          {orders &&
+            orders.map((order, index) => (
               <TableRow className={`bg-gray-50`} key={index}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.accountType}</TableCell>
+                <TableCell>{order.user.name}</TableCell>
+                <TableCell>{order.amount}</TableCell>
+                <TableCell>{order.products.length}</TableCell>
                 <TableCell>
                   <span
                     className="cursor-pointer bg-gray-500 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
-                    onClick={() => {}}
+                    onClick={() => _deleteOrder(order.id)}
                   >
                     <i className="fas fa-ellipsis-vertical text-white" />
                   </span>
@@ -60,4 +59,4 @@ const UserTable: FC<{
   );
 };
 
-export default UserTable;
+export default OrderTable;

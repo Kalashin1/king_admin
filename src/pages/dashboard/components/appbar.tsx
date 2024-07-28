@@ -9,8 +9,12 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "../../../components/ui/avatar";
+import { FC } from "react";
 
-const Appbar = () => {
+const Appbar: FC<{
+  initials: string;
+  profilePicURL: string;
+}> = ({ initials, profilePicURL }) => {
   return (
     <div className="flex justify-between items-center px-4 py-2 bg-white sticky top-0 z-20">
       <div>
@@ -21,8 +25,8 @@ const Appbar = () => {
           <NavigationMenuList>
             <NavigationMenuItem>
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={profilePicURL} />
+                <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
             </NavigationMenuItem>
           </NavigationMenuList>

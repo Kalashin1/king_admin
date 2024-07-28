@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
-import { FormEvent, useContext, useRef } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { SCREENS } from "../../../../navigation/constant";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../../../../firebase-setting";
@@ -7,11 +7,14 @@ import { doc, setDoc } from "firebase/firestore";
 import { LoaderContext } from "../../../../App";
 import Select from "react-select";
 import Input from "../../../../components/ui/input";
+import { USER_TYPE } from "../../../../types";
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
 
   const { isLoading, setIsLoading } = useContext(LoaderContext);
+
+  const [accountType, setAccountType] = useState<USER_TYPE>();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -36,6 +39,7 @@ const RegistrationForm = () => {
         isAdmin: email.toLowerCase().includes("@admin") ? true : false,
         email,
         createdAt: new Date().getTime().toString(),
+        accountType,
       });
       setIsLoading!(false);
       navigate(SCREENS.DASHBOARD);
@@ -48,6 +52,10 @@ const RegistrationForm = () => {
   };
 
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [passwordType, setPasswordType] = useState<"password" | "text">(
+    "password"
+  );
+
   return (
     <form
       className="bg-white rounded-md shadow-2xl p-5"
@@ -63,6 +71,7 @@ const RegistrationForm = () => {
         placeholder="Enter your full name"
         hasIcon={true}
         icon="fas fa-user"
+        required
         type="text"
       />
       <Input
@@ -71,20 +80,30 @@ const RegistrationForm = () => {
         placeholder="Enter your email"
         icon="fas fa-envelope"
         hasIcon={true}
+        required
       />
       <Input
         name="password"
-        type="password"
+        type={passwordType}
+        iconHasHandler={true}
         placeholder="Enter your password"
         icon="fas fa-lock"
+        iconClickHandler={() => {
+          if (passwordType === "password") setPasswordType("text");
+          else setPasswordType("password");
+        }}
         hasIcon={true}
+        required
       />
       <Select
         placeholder="Select Your Account Type"
+        required
         options={[
           { label: "Student", value: "student" },
-          { label: "Professional", value: "Professional" },
+          { label: "Professional", value: "professional" },
+          { label: "Admin", value: "admin" },
         ]}
+        onChange={(v) => setAccountType(v?.value as USER_TYPE)}
       />
       <button
         type="submit"

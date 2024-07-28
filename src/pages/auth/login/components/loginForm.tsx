@@ -1,22 +1,26 @@
-import { FormEvent, useRef } from "react";
+import { FormEvent, useContext, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { SCREENS } from "../../../../navigation/constant";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../../../firebase-setting";
 import { doc, getDoc } from "firebase/firestore";
 import Input from "../../../../components/ui/input";
+import { LoaderContext } from "../../../../App";
 
 const LoginForm = () => {
   const naivgate = useNavigate();
+  const { setIsLoading, isLoading } = useContext(LoaderContext);
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading!(true);
     const {
       email: { value: email },
       password: { value: password },
     } = formRef.current!;
+
     try {
       const { user } = await signInWithEmailAndPassword(
         auth,
@@ -25,15 +29,17 @@ const LoginForm = () => {
       );
       localStorage.setItem("user_id", user.uid);
       const docRef = await getDoc(doc(db, "users", user.uid));
+      setIsLoading!(false);
       if (docRef.exists()) {
+        localStorage.setItem("user_id", docRef.id);
         naivgate(SCREENS.DASHBOARD);
       } else {
         alert("Your account has been deactivated please contact the admin");
         return;
       }
     } catch (error) {
+      setIsLoading!(false);
       alert("error logging in");
-      // handle error later
       console.log(error);
     }
   };
@@ -55,7 +61,7 @@ const LoginForm = () => {
       />
 
       <Input
-        name="passwrod"
+        name="password"
         type="password"
         placeholder="Enter your password to continue"
         hasIcon={true}
@@ -68,7 +74,7 @@ const LoginForm = () => {
         type="submit"
         className="block w-full bg-indigo-600 mt-5 py-2 rounded-md hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
       >
-        Login
+        {isLoading ? "...loading" : "Login"}
       </button>
       <div className="mt-4">
         <Link

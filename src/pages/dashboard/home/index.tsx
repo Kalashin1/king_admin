@@ -1,9 +1,9 @@
-import Layout from "../components/layout";
+import AuthContext from "../components/auth-provider";
 const Home = () => {
   return (
-    <Layout>
+    <AuthContext>
       <h1>Hello</h1>
-    </Layout>
+    </AuthContext>
   );
 };
 

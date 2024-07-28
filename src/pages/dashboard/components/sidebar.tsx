@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { SCREENS } from "../../../navigation/constant";
 import { getDoc, doc } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { db } from "../../../firebase-setting";
+import { auth, db } from "../../../firebase-setting";
 import { User } from "../../../types";
 
 const Sidebar = () => {
@@ -57,27 +57,27 @@ const Sidebar = () => {
             <div
               role="button"
               tabIndex={0}
-              onClick={() => navigate(SCREENS.CREATE_INVESTMENT)}
+              onClick={() => navigate(SCREENS.CREATE_COURSE)}
               className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
             >
               <div className="grid place-items-center mr-4">
                 <i className="fa-solid fa-square-plus"></i>
               </div>
-              Create Investment
+              Create Course
             </div>
           )}
           <div
             role="button"
             tabIndex={0}
-            onClick={() => navigate(SCREENS.INVESTMENTS)}
+            onClick={() => navigate(SCREENS.COURSES)}
             className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
           >
             <div className="grid place-items-center mr-4">
               <i className="fa-solid fa-seedling"></i>
             </div>
-            Investments
+            Your Courses
           </div>
-          {user?.isAdmin && (
+          {
             <div
               role="button"
               tabIndex={0}
@@ -89,7 +89,7 @@ const Sidebar = () => {
               </div>
               Plans
             </div>
-          )}
+          }
           {user?.isAdmin && (
             <div
               role="button"
@@ -119,35 +119,27 @@ const Sidebar = () => {
           <div
             role="button"
             tabIndex={0}
-            onClick={() => navigate(SCREENS.TRANSACTIONS)}
+            onClick={() => navigate(SCREENS.COURSES)}
             className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
           >
             <div className="grid place-items-center mr-4">
               <i className="fa-solid fa-arrow-down-up-across-line"></i>
             </div>
-            Transactions
+            Your Orders
           </div>
-          {!user?.isAdmin && (
+          {
             <div
               role="button"
               tabIndex={0}
-              onClick={() => navigate(SCREENS.WITHDRAWAL)}
+              onClick={() => navigate(SCREENS.COURSES)}
               className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
             >
               <div className="grid place-items-center mr-4">
                 <i className="fa-solid fa-money-bill-transfer"></i>
               </div>
-              Withdraw{" "}
-              {/* <div className="grid place-items-center ml-auto justify-self-end">
-              <div
-                className="relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none bg-blue-500/20 text-blue-900 py-1 px-2 text-xs rounded-full"
-                style={{ opacity: 1 }}
-              >
-                <span className="">14</span>
-              </div>
-            </div> */}
+              Invoices
             </div>
-          )}
+          }
           {!user?.isAdmin && (
             <div
               role="button"
@@ -164,7 +156,11 @@ const Sidebar = () => {
           <div
             role="button"
             tabIndex={0}
-            onClick={() => navigate(SCREENS.LOGIN)}
+            onClick={async () => {
+              localStorage.removeItem("user_id");
+              await auth.signOut();
+              navigate(SCREENS.LOGIN);
+            }}
             className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
           >
             <div className="grid place-items-center mr-4">

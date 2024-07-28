@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/layout";
 import UserTable from "./components/users-table";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebase-setting";
 import { User } from "../../../types";
+import AuthContext from "../components/auth-provider";
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -21,16 +21,18 @@ const Users = () => {
     fetchUsers();
   }, []);
   return (
-    <Layout>
-      <div className="px-12 py-8">
-        <h3 className="text-2xl font-bold">Users</h3>
-      </div>
-      <section className="px-12 py-6 h-screen">
-        <div className="bg-white">
-          {users && <UserTable users={users} updateUsers={fetchUsers} />}
+    <AuthContext>
+      <>
+        <div className="px-12 py-8">
+          <h3 className="text-2xl font-bold">Users</h3>
         </div>
-      </section>
-    </Layout>
+        <section className="px-12 py-6 h-screen">
+          <div className="bg-white">
+            {users && <UserTable users={users} updateUsers={fetchUsers} />}
+          </div>
+        </section>
+      </>
+    </AuthContext>
   );
 };
 

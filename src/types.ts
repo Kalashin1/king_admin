@@ -1,61 +1,88 @@
 import { DocumentData } from "firebase/firestore";
 
-export type User = {
+export interface User extends DocumentData {
   id: string;
   name: string;
   email: string;
   phone: string;
   address: string;
-  bank: {
-    bankName: string;
-    iban: string;
-    accountNumber: string;
-    swiftCode: string;
-  };
-  btcAddress: string;
-  currentInvestments: Investment[];
+  thumbnail: string;
+  accountType: USER_TYPE;
+  courses: CoursePayload[];
+}
+
+export type USER_TYPE = "student" | "professional" | "admin";
+
+export type CoursePayload = Pick<
+  Course,
+  "id" | "description" | "title" | "thumbnail" | "price"
+>;
+
+export const COURSE_STATUS = [
+  "CREATED",
+  "ACCEPTED",
+  "APPROVED",
+  "PAUSED",
+  "ARCHIVED",
+] as const;
+
+export type UserPayload = Pick<
+  User,
+  "id" | "email" | "phone" | "thumbnail" | "name" | "accountType"
+>;
+
+export type PlanPayload = Pick<
+  Plan,
+  "id" | "title" | "description" | "price" | "thumbnail"
+>;
+
+export interface Course extends DocumentData {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
   createdAt: string;
-  isAdmin: boolean;
-  birthday: number;
-} & DocumentData;
+  updatedAt: string;
+  thumbnail: string;
+  students: UserPayload[];
+  files: string[];
+  createdFor: Array<"student" | "professional">;
+  status: (typeof COURSE_STATUS)[number];
+}
 
 export type Plan = {
   id: string;
   title: string;
-  ROI: string;
   description: string;
-  price: string;
-  duration: number;
+  price: number;
   createdAt: string;
+  updatedAt: string;
+  thumbnail: string;
+  files: string[];
+  status: (typeof COURSE_STATUS)[number];
 } & DocumentData;
 
-export type Transaction = {
-  type: "WITHDRAWAL" | "INVESTMENT";
+export type OrderPayload = Pick<Order, "id" | "amount">;
+
+export type Order = {
+  products: Array<PlanPayload | CoursePayload>;
   id: string;
-  createdAt: string;
+  createdAt: number;
+  updatedAt: number;
   amount: number;
   status: "PENDING" | "COMPLETED" | "FAILED";
   user: Pick<User, "id" | "name" | "email">;
-  method?: {
-    value: string;
-    label: string | "BTC";
-  };
 } & DocumentData;
 
-export type Investment = {
+export type InvoicePayload = Pick<Invoice, "id" | "order">;
+
+export type Invoice = {
   id: string;
   user: Pick<User, "name" | "id" | "phone">;
-  createAt: string;
-  plan: Pick<Plan, "id" | "title" | "id" | "ROI" | "duration">;
-  withdrawalDate: string;
-  earnings: number;
-  status:
-    | "CREATED"
-    | "PROCESSING"
-    | "PAUSED"
-    | "ACCEPTED"
-    | "REJECTED"
-    | "CANCELED";
+  createdAt: number;
+  updatedAt: number;
+  status: "ACCEPTED" | "BILLED" | "CREATED" | "REJECTED" | "CANCELED";
+  order: OrderPayload;
 } & DocumentData;
 
 export function addDaysToDate(date: Date, daysToAdd: number): Date {
