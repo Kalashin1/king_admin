@@ -43,6 +43,7 @@ const CreateCourseForm = () => {
       course_title: { value: title },
       price: { value: price },
       description: { value: description },
+      link: { value: link },
     } = courseFormRef.current!;
     try {
       const imageURL = await uploadAsset(
@@ -62,6 +63,7 @@ const CreateCourseForm = () => {
         status: COURSE_STATUS[0],
         thumbnail: imageURL,
         files: _files,
+        link,
       });
       setIsLoading!(false);
       notify(<NotificationComponent message="Course created successfully!" />, {
@@ -149,6 +151,10 @@ const CreateCourseForm = () => {
             <p>Drag n drop some files here, or click to select files</p>
           )}
         </div>
+      </div>
+
+      <div className="my-4">
+        <Input name="link" type="text" hasIcon={true} icon={"fas fa-link"} />
       </div>
 
       <button

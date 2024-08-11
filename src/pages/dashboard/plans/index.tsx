@@ -32,7 +32,7 @@ const Courses = () => {
       <section className="px-6 py-2">
         <div className="px-12 mt-8">
           <h3 className="text-2xl font-bold">
-            View your {/* // TODO: Change text based on user  */} Courses
+            View your {/* // TODO: Change text based on user  */} Plans
           </h3>
         </div>
         <section className="px-12 py-6 h-screen">

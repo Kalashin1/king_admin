@@ -35,7 +35,7 @@ const CreatePlanTable: FC<{
                 <TableCell>
                   {formatter({ currency: "USD" }).format(plan.price)}
                 </TableCell>
-                <TableCell>{plan.students.length}</TableCell>
+                <TableCell>{plan?.students?.length}</TableCell>
                 <TableCell>{plan.status}</TableCell>
                 <TableCell>
                   <span

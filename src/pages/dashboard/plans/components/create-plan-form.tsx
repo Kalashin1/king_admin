@@ -41,6 +41,7 @@ const CreatePlanForm = () => {
       course_title: { value: title },
       price: { value: price },
       description: { value: description },
+      link: { value: link },
     } = courseFormRef.current!;
     try {
       const imageURL = await uploadAsset(
@@ -59,6 +60,7 @@ const CreatePlanForm = () => {
         status: COURSE_STATUS[0],
         thumbnail: imageURL,
         files: _files,
+        link,
       });
       setIsLoading!(false);
       notify(<NotificationComponent message="plan created successfully!" />, {
@@ -113,6 +115,7 @@ const CreatePlanForm = () => {
           hasIcon={true}
           icon={"fas fa-dollar-sign"}
         />
+        <Input name="link" type="text" hasIcon={true} icon={"fas fa-link"} />
       </div>
 
       <TextArea
