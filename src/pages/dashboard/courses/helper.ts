@@ -73,3 +73,16 @@ export const fetchCourses = async (
     return [error, null];
   }
 };
+
+export const getCourse = async (
+  id: string
+): Promise<[unknown, Course | null]> => {
+  try {
+    const docRef = await getDoc(doc(db, "courses", id));
+    if (docRef.exists()) {
+      return [null, { id: docRef.id, ...docRef.data() } as Course];
+    } else return [{ message: "document does not exist" }, null];
+  } catch (error) {
+    return [error, null];
+  }
+};

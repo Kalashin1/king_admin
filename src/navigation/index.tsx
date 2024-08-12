@@ -10,6 +10,7 @@ import Plans from "../pages/dashboard/plans";
 import CreatePlan from "../pages/dashboard/plans/create";
 import Orders from "../pages/dashboard/orders";
 import Invoices from "../pages/dashboard/invoices";
+import EditCourse from "../pages/dashboard/courses/edit";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: SCREENS.CREATE_PLAN,
     element: <CreatePlan />,
+  },
+  {
+    path: SCREENS.EDIT_PLAN(),
+    element: <EditCourse />,
   },
 ]);
 
