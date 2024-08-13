@@ -35,7 +35,7 @@ const CreateCourseTable: FC<{
                 <TableCell>
                   {formatter({ currency: "USD" }).format(course.price)}
                 </TableCell>
-                <TableCell>{course.students.length}</TableCell>
+                <TableCell>{course?.students?.length}</TableCell>
                 <TableCell>{course.status}</TableCell>
                 <TableCell>
                   <span

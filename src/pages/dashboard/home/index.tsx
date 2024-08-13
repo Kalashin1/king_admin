@@ -53,14 +53,18 @@ const Home = () => {
   return (
     <AuthContext>
       <section className="px-8 py-2 min-h-screen">
-        <div className="mt-8 mb-4">
-          <h3 className="text-2xl">
-            View your {/* // TODO: Change text based on user  */} Courses
-          </h3>
-        </div>
-        <div className="bg-white">
-          <CourseTable courses={courses} />
-        </div>
+        {courses && (
+          <>
+            <div className="mt-8 mb-4">
+              <h3 className="text-2xl">
+                View your {/* // TODO: Change text based on user  */} Courses
+              </h3>
+            </div>
+            <div className="bg-white">
+              <CourseTable courses={courses} />
+            </div>
+          </>
+        )}
         {plans && plans.length && (
           <>
             <div className="mt-8 mb-4">

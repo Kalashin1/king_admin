@@ -21,8 +21,7 @@ const CreatePlanTable: FC<{
             <TableHead className="w-[100px]">S/N</TableHead>
             <TableHead>title</TableHead>
             <TableHead>Price</TableHead>
-            <TableHead>Students</TableHead>
-            <TableHead>Status</TableHead>
+
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -35,8 +34,7 @@ const CreatePlanTable: FC<{
                 <TableCell>
                   {formatter({ currency: "USD" }).format(plan.price)}
                 </TableCell>
-                <TableCell>{plan?.students?.length}</TableCell>
-                <TableCell>{plan.status}</TableCell>
+                {/* <TableCell>{plan.status}</TableCell> */}
                 <TableCell>
                   <span
                     className="cursor-pointer bg-gray-500 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
