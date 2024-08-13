@@ -47,9 +47,11 @@ const UserTable: FC<{
                 <TableCell>
                   <span
                     className="cursor-pointer bg-gray-500 rounded-full flex items-center justify-center h-8 w-8 shadow-md"
-                    onClick={() => {}}
+                    onClick={() => {
+                      _deleteUser(user.id);
+                    }}
                   >
-                    <i className="fas fa-ellipsis-vertical text-white" />
+                    <i className="fas fa-trash text-white" />
                   </span>
                 </TableCell>
               </TableRow>
