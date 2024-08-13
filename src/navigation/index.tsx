@@ -11,6 +11,7 @@ import CreatePlan from "../pages/dashboard/plans/create";
 import Orders from "../pages/dashboard/orders";
 import Invoices from "../pages/dashboard/invoices";
 import EditCourse from "../pages/dashboard/courses/edit";
+import EditPlan from "../pages/dashboard/plans/edit";
 
 const router = createBrowserRouter([
   {
@@ -58,8 +59,12 @@ const router = createBrowserRouter([
     element: <CreatePlan />,
   },
   {
-    path: SCREENS.EDIT_PLAN(),
+    path: SCREENS.EDIT_COURSE(),
     element: <EditCourse />,
+  },
+  {
+    path: SCREENS.EDIT_PLAN(),
+    element: <EditPlan />,
   },
 ]);
 

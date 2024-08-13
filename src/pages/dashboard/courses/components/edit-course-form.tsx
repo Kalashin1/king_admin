@@ -1,7 +1,6 @@
 import Input from "../../../../components/ui/input";
-import Select from "react-select";
 import TextArea from "../../../../components/ui/text-area";
-import { Course, COURSE_STATUS, USER_TYPE } from "../../../../types";
+import { Course, COURSE_STATUS } from "../../../../types";
 import { FormEvent, useCallback, useContext, useRef, useState } from "react";
 import { NotificationComponent, notify } from "../../../../components/ui/toast";
 import { doc, updateDoc } from "firebase/firestore";
@@ -15,24 +14,23 @@ import { uploadAsset } from "../../helper";
 const EditCourseForm = ({ course }: { course: Course }) => {
   const courseFormRef = useRef<HTMLFormElement | null>(null);
   const { setIsLoading } = useContext(LoaderContext);
-  const [selectedUserRole, updateSelectedUserRole] = useState<USER_TYPE>();
   const navigate = useNavigate();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles(acceptedFiles);
-  }, []);
+  // const onDrop = useCallback((acceptedFiles: File[]) => {
+  //   setFiles(acceptedFiles);
+  // }, []);
 
   const onThumbnailDrop = useCallback((acceptedFiles: File[]) => {
     setThumbnail(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const {
     getRootProps: _getRootProps,
     getInputProps: _getInputProps,
     isDragActive: _isDragActive,
   } = useDropzone({ onDrop: onThumbnailDrop });
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
 
   const [thumbnailFile, setThumbnail] = useState<File[]>([]);
 
@@ -48,10 +46,9 @@ const EditCourseForm = ({ course }: { course: Course }) => {
     try {
       const imageURL = await uploadAsset(
         thumbnailFile,
-        "courses/thumbnail/",
+        `courses/thumbnail/${title}/`,
         false
       );
-      const _files = await uploadAsset(files, "courses/thumbnail/", false);
       await updateDoc(doc(db, "courses", course.id), {
         title,
         price: parseFloat(price),
@@ -59,10 +56,9 @@ const EditCourseForm = ({ course }: { course: Course }) => {
         updatedAt: new Date().getTime(),
         createdAt: new Date().getTime(),
         students: [],
-        createdFor: [selectedUserRole],
         status: COURSE_STATUS[0],
         thumbnail: imageURL ?? course.thumbnail,
-        files: [..._files, ...course.files],
+        // files: [..._files, ...course.files],
         link,
       });
       setIsLoading!(false);
@@ -110,6 +106,7 @@ const EditCourseForm = ({ course }: { course: Course }) => {
         type="text"
         placeholder="Enter a title for your course"
         hasIcon={true}
+        defaultValue={course?.title}
         icon={"fas fa-heading"}
       />
 
@@ -117,29 +114,26 @@ const EditCourseForm = ({ course }: { course: Course }) => {
         <Input
           name="price"
           type="number"
+          defaultValue={String(course.price)}
           hasIcon={true}
           icon={"fas fa-dollar-sign"}
         />
-
-        <div>
-          <Select
-            placeholder="Select user category"
-            required
-            options={[
-              { label: "Student", value: "student" },
-              { label: "Professional", value: "professional" },
-            ]}
-            onChange={(v) => updateSelectedUserRole(v?.value as USER_TYPE)}
-          />
-        </div>
+        <Input
+          name="link"
+          type="text"
+          hasIcon={true}
+          defaultValue={course.link}
+          icon={"fas fa-link"}
+        />
       </div>
 
       <TextArea
         name="description"
+        defaultValue={course?.description}
         placeholder="Enter a description for your course"
       />
 
-      <div
+      {/* <div
         className="border
        rounded p-4 cursor-pointer"
       >
@@ -151,17 +145,15 @@ const EditCourseForm = ({ course }: { course: Course }) => {
             <p>Drag n drop some files here, or click to select files</p>
           )}
         </div>
-      </div>
+      </div> */}
 
-      <div className="my-4">
-        <Input name="link" type="text" hasIcon={true} icon={"fas fa-link"} />
-      </div>
+      <div className="my-4"></div>
 
       <button
         type="submit"
         className="block w-full bg-indigo-600 mt-5 py-2 rounded-md hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
       >
-        {"Create Course"}
+        {"Edit Course"}
       </button>
     </form>
   );

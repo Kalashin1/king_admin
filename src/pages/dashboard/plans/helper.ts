@@ -1,4 +1,4 @@
-import { query, collection, getDocs } from "firebase/firestore";
+import { query, collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../../../firebase-setting";
 import { Course, Plan, PlanPayload } from "../../../types";
 
@@ -27,6 +27,17 @@ export const fetchPlans = async (): Promise<[unknown, Plan[] | null]> => {
     })) as Plan[];
     console.log("plans", plans);
     return [null, plans];
+  } catch (error) {
+    return [error, null];
+  }
+};
+
+export const getPlan = async (id: string): Promise<[unknown, Plan | null]> => {
+  try {
+    const docRef = await getDoc(doc(db, "plans", id));
+    if (docRef.exists()) {
+      return [null, { id: docRef.id, ...docRef.data() } as Plan];
+    } else return [{ message: "document does not exist" }, null];
   } catch (error) {
     return [error, null];
   }

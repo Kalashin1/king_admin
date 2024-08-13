@@ -1,9 +1,9 @@
 import Input from "../../../../components/ui/input";
 import TextArea from "../../../../components/ui/text-area";
-import { COURSE_STATUS } from "../../../../types";
+import { COURSE_STATUS, Plan } from "../../../../types";
 import { FormEvent, useCallback, useContext, useRef, useState } from "react";
 import { NotificationComponent, notify } from "../../../../components/ui/toast";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../firebase-setting";
 import { LoaderContext } from "../../../../App";
 import { useNavigate } from "react-router-dom";
@@ -11,26 +11,26 @@ import { SCREENS } from "../../../../navigation/constant";
 import { useDropzone } from "react-dropzone";
 import { uploadAsset } from "../../helper";
 
-const CreatePlanForm = () => {
+const EditPlanForm = ({ plan }: { plan: Plan }) => {
   const courseFormRef = useRef<HTMLFormElement | null>(null);
   const { setIsLoading } = useContext(LoaderContext);
   const navigate = useNavigate();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles(acceptedFiles);
-  }, []);
+  // const onDrop = useCallback((acceptedFiles: File[]) => {
+  //   setFiles(acceptedFiles);
+  // }, []);
 
   const onThumbnailDrop = useCallback((acceptedFiles: File[]) => {
     setThumbnail(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const {
     getRootProps: _getRootProps,
     getInputProps: _getInputProps,
     isDragActive: _isDragActive,
   } = useDropzone({ onDrop: onThumbnailDrop });
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
 
   const [thumbnailFile, setThumbnail] = useState<File[]>([]);
 
@@ -46,11 +46,11 @@ const CreatePlanForm = () => {
     try {
       const imageURL = await uploadAsset(
         thumbnailFile,
-        `plans/thumbnail/${title}`,
+        `plans/thumbnail/${title}/`,
         false
       );
-      const _files = await uploadAsset(files, `plans/files/${title}`, false);
-      await addDoc(collection(db, "plans"), {
+      // const _files = await uploadAsset(files, `plans/files/${title}/`, false);
+      await updateDoc(doc(db, "plans", plan.id), {
         title,
         price: parseFloat(price),
         description,
@@ -58,12 +58,12 @@ const CreatePlanForm = () => {
         createdAt: new Date().getTime(),
         students: [],
         status: COURSE_STATUS[0],
-        thumbnail: imageURL,
-        files: _files,
+        thumbnail: plan?.thumbnail ?? imageURL,
+        // files: _files,
         link,
       });
       setIsLoading!(false);
-      notify(<NotificationComponent message="plan created successfully!" />, {
+      notify(<NotificationComponent message="plan updated successfully!" />, {
         className: "font-bold",
       });
       navigate(SCREENS.PLANS);
@@ -85,7 +85,7 @@ const CreatePlanForm = () => {
       <div className="flex flex-row justify-between items-center">
         <div>
           <h1 className="text-gray-800 font-bold text-2xl mb-1">Hello</h1>
-          <p className="text-sm font-normal text-gray-600 mb-8">Create Plan</p>
+          <p className="text-sm font-normal text-gray-600 mb-8">Edit Plan</p>
         </div>
 
         <button
@@ -105,6 +105,7 @@ const CreatePlanForm = () => {
         type="text"
         placeholder="Enter a title for your Plan"
         hasIcon={true}
+        defaultValue={plan?.title}
         icon={"fas fa-heading"}
       />
 
@@ -113,17 +114,25 @@ const CreatePlanForm = () => {
           name="price"
           type="number"
           hasIcon={true}
+          defaultValue={String(plan.price)}
           icon={"fas fa-dollar-sign"}
         />
-        <Input name="link" type="text" hasIcon={true} icon={"fas fa-link"} />
+        <Input
+          name="link"
+          type="text"
+          defaultValue={plan.link}
+          hasIcon={true}
+          icon={"fas fa-link"}
+        />
       </div>
 
       <TextArea
         name="description"
+        defaultValue={plan?.description}
         placeholder="Enter a description for your plan"
       />
 
-      <div
+      {/* <div
         className="border
        rounded p-4 cursor-pointer"
       >
@@ -135,16 +144,16 @@ const CreatePlanForm = () => {
             <p>Drag n drop some files here, or click to select files</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       <button
         type="submit"
         className="block w-full bg-indigo-600 mt-5 py-2 rounded-md hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
       >
-        {"Create Plan"}
+        {"Edit Plan"}
       </button>
     </form>
   );
 };
 
-export default CreatePlanForm;
+export default EditPlanForm;

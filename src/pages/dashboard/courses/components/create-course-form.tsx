@@ -48,7 +48,7 @@ const CreateCourseForm = () => {
     try {
       const imageURL = await uploadAsset(
         thumbnailFile,
-        "courses/thumbnail/",
+        `courses/thumbnail/${title}/`,
         false
       );
       const _files = await uploadAsset(files, "courses/thumbnail/", false);

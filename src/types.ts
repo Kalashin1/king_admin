@@ -48,6 +48,7 @@ export interface Course extends DocumentData {
   files: string[];
   createdFor: Array<"student" | "professional">;
   status: (typeof COURSE_STATUS)[number];
+  link: string;
 }
 
 export type Plan = {
@@ -59,6 +60,7 @@ export type Plan = {
   updatedAt: string;
   thumbnail: string;
   files: string[];
+  link: string;
   status: (typeof COURSE_STATUS)[number];
 } & DocumentData;
 
