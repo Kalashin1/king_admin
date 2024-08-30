@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { FC, useState } from "react";
 import {
   Table,
   TableBody,
@@ -71,7 +71,10 @@ const CreateCourseTable: FC<{
                   </button>
                 </li>
                 <li>
-                  <button className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center" onClick={() => deleteCourse(course.id)}>
+                  <button
+                    className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center"
+                    onClick={() => deleteCourse(course.id)}
+                  >
                     <span>Delete</span>
                     <i className="fas fa-trash" />
                   </button>
