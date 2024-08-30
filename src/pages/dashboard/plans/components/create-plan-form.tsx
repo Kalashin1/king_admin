@@ -13,7 +13,7 @@ import { uploadAsset } from "../../helper";
 
 const CreatePlanForm = () => {
   const courseFormRef = useRef<HTMLFormElement | null>(null);
-  const { setIsLoading } = useContext(LoaderContext);
+  const { setIsLoading, isLoading } = useContext(LoaderContext);
   const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -141,7 +141,11 @@ const CreatePlanForm = () => {
         type="submit"
         className="block w-full bg-indigo-600 mt-5 py-2 rounded-md hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
       >
-        {"Create Plan"}
+        {isLoading ? (
+          <span className="fas fa-cog fa-spin"></span>
+        ) : (
+          <span>Create Plan</span>
+        )}
       </button>
     </form>
   );

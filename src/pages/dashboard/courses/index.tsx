@@ -39,7 +39,7 @@ const Courses = () => {
         </div>
         <section className="px-12 py-6 h-screen">
           <div className="bg-white">
-            <CourseTable courses={courses} />
+            <CourseTable courses={courses} loadCourses={loadCourses} />
           </div>
         </section>
       </section>

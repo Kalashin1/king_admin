@@ -37,7 +37,7 @@ const Courses = () => {
         </div>
         <section className="px-12 py-6 h-screen">
           <div className="bg-white">
-            <PlanTable plans={plans} />
+            <PlanTable plans={plans} setPlans={loadPlans} />
           </div>
         </section>
       </section>

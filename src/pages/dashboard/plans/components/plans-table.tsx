@@ -12,14 +12,25 @@ import { formatter } from "../../helper";
 import { useNavigate } from "react-router-dom";
 import { Dropdown } from "../../components/dropdown";
 import { SCREENS } from "../../../../navigation/constant";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../../firebase-setting";
+import { NotificationComponent, notify } from "../../../../components/ui/toast";
 
 const CreatePlanTable: FC<{
   plans: Plan[];
-}> = ({ plans }) => {
+  setPlans: () => Promise<void>;
+}> = ({ plans, setPlans }) => {
   const navigate = useNavigate();
+
+  const deletePlan = async (id: string) => {
+    await deleteDoc(doc(db, "plans", id));
+    notify(<NotificationComponent message="plan deleted successfully!" />);
+    setPlans();
+  };
 
   const PlanTableRow = ({ plan, index }: { plan: Plan; index: number }) => {
     const [showDropdown, setShowDropdown] = useState(false);
+
     return (
       <TableRow
         className={`bg-gray-50`}
@@ -56,7 +67,10 @@ const CreatePlanTable: FC<{
                   </button>
                 </li>
                 <li>
-                  <button className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center">
+                  <button
+                    className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center"
+                    onClick={() => deletePlan(plan.id)}
+                  >
                     <span>Delete</span>
                     <i className="fas fa-trash" />
                   </button>

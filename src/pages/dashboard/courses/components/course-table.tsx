@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,10 +12,14 @@ import { formatter } from "../../helper";
 import { Dropdown } from "../../components/dropdown";
 import { SCREENS } from "../../../../navigation/constant";
 import { useNavigate } from "react-router-dom";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../../firebase-setting";
+import { NotificationComponent, notify } from "../../../../components/ui/toast";
 
 const CreateCourseTable: FC<{
   courses: Course[];
-}> = ({ courses }) => {
+  loadCourses: () => Promise<void>;
+}> = ({ courses, loadCourses }) => {
   const navigate = useNavigate();
   const CourseTableRow = ({
     course,
@@ -25,6 +29,11 @@ const CreateCourseTable: FC<{
     index: number;
   }) => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const deleteCourse = async (id: string) => {
+      await deleteDoc(doc(db, "courses", id));
+      notify(<NotificationComponent message="Course deleted successfully!" />);
+      loadCourses();
+    };
     return (
       <TableRow
         className={`bg-gray-50 relative`}
@@ -62,7 +71,7 @@ const CreateCourseTable: FC<{
                   </button>
                 </li>
                 <li>
-                  <button className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center">
+                  <button className="flex h-8 space-x-3 px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 w-full dark:focus:bg-navy-600 dark:focus:text-navy-100 justify-between items-center" onClick={() => deleteCourse(course.id)}>
                     <span>Delete</span>
                     <i className="fas fa-trash" />
                   </button>
