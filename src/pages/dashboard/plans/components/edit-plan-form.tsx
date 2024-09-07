@@ -13,7 +13,7 @@ import { uploadAsset } from "../../helper";
 
 const EditPlanForm = ({ plan }: { plan: Plan }) => {
   const courseFormRef = useRef<HTMLFormElement | null>(null);
-  const { setIsLoading } = useContext(LoaderContext);
+  const { setIsLoading, isLoading } = useContext(LoaderContext);
   const navigate = useNavigate();
 
   // const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -38,17 +38,19 @@ const EditPlanForm = ({ plan }: { plan: Plan }) => {
     e.preventDefault();
     setIsLoading!(true);
     const {
-      course_title: { value: title },
+      plan_title: { value: title },
       price: { value: price },
       description: { value: description },
       link: { value: link },
     } = courseFormRef.current!;
     try {
-      const imageURL = await uploadAsset(
-        thumbnailFile,
-        `plans/thumbnail/${title}/`,
-        false
-      );
+      let imageURL: string = '';
+      if (thumbnailFile.length > 0)
+        imageURL = await uploadAsset(
+          thumbnailFile,
+          `plans/thumbnail/${title}/`,
+          false
+        );
       // const _files = await uploadAsset(files, `plans/files/${title}/`, false);
       await updateDoc(doc(db, "plans", plan.id), {
         title,
@@ -150,7 +152,7 @@ const EditPlanForm = ({ plan }: { plan: Plan }) => {
         type="submit"
         className="block w-full bg-indigo-600 mt-5 py-2 rounded-md hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
       >
-        {"Edit Plan"}
+        {isLoading ? "..loading" : "Edit Plan"}
       </button>
     </form>
   );
