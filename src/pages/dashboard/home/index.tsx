@@ -61,7 +61,7 @@ const Home = () => {
               </h3>
             </div>
             <div className="bg-white">
-              <CourseTable courses={courses} />
+              <CourseTable loadCourses={loadCourses} courses={courses} />
             </div>
           </>
         )}
@@ -71,7 +71,7 @@ const Home = () => {
               <h3 className="text-2xl">View your Plans</h3>
             </div>
             <div className="bg-white">
-              <Plans plans={plans} />
+              <Plans setPlans={loadPlans} plans={plans} />
             </div>
           </>
         )}
